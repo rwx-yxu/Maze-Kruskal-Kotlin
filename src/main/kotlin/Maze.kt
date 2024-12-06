@@ -60,39 +60,27 @@ class Maze(cols: Double, rows: Double){
 
             if (setSizeA != null && setSizeB != null){
                 val setSizeResult = setSizeA.compareTo(setSizeB)
-                if (setSizeResult> 0){
-                    val tempSetKeyToRemove = set[1].setKey
-                    sets[tempSetKeyToRemove]?.forEach {
-                        it.setKey = set[0].setKey
-                        sets[it.setKey]?.add(it)
-                    }
-                    sets.remove(tempSetKeyToRemove)
+                if (setSizeResult > 0){
+                    union(set[1].setKey, set[0].setKey)
                 }else if (setSizeResult < 0){
-                    val tempSetKeyToRemove = set[0].setKey
-                    sets[tempSetKeyToRemove]?.forEach {
-                        it.setKey = set[1].setKey
-                        sets[it.setKey]?.add(it)
-                    }
-                    sets.remove(tempSetKeyToRemove)
+                    union(set[0].setKey, set[1].setKey)
                 }else{
                     if (set[0].setKey > set[1].setKey){
-                        val tempSetKeyToRemove = set[1].setKey
-                        sets[tempSetKeyToRemove]?.forEach {
-                            it.setKey = set[0].setKey
-                            sets[it.setKey]?.add(it)
-                        }
-                        sets.remove(tempSetKeyToRemove)
+                        union(set[1].setKey, set[0].setKey)
                     }else {
-                        val tempSetKeyToRemove = set[0].setKey
-                        sets[tempSetKeyToRemove]?.forEach {
-                            it.setKey = set[1].setKey
-                            sets[it.setKey]?.add(it)
-                        }
-                        sets.remove(tempSetKeyToRemove)
+                        union(set[0].setKey, set[1].setKey)
                     }
                 }
                 set[0].removeWall(set[1])
             }
         }
+    }
+
+    private fun union(key: Int,  targetNewKey: Int){
+        sets[key]?.forEach {
+            it.setKey = targetNewKey
+            sets[it.setKey]?.add(it)
+        }
+        sets.remove(key)
     }
 }
