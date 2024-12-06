@@ -1,8 +1,8 @@
 import org.openrndr.draw.Drawer
 
 class Maze(cols: Double, rows: Double){
-    private val nodes = mutableListOf<Node>() //16
-    private val edges = mutableListOf<MutableList<Node>>()
+    private val nodes = mutableListOf<Node>()
+    private val edges = mutableListOf<NodePair>()
     private val sets = mutableMapOf<Int,MutableList<Node>>()
 
     companion object {
@@ -30,10 +30,7 @@ class Maze(cols: Double, rows: Double){
         for (i in nodes.indices){
             val nodeNeighbours = nodes[i].getNeighbours(cols = cols.toInt(), rows = rows.toInt(), nodes = nodes)
             for (j in nodeNeighbours.indices){
-                val edgeNodes = mutableListOf<Node>()
-                edgeNodes.add(nodes[i])
-                edgeNodes.add(nodeNeighbours[j])
-                edges.add(edgeNodes)
+                edges.add(NodePair(left = nodes[i], right = nodeNeighbours[j]))
             }
             nodes[i].visited = true
         }
@@ -45,7 +42,7 @@ class Maze(cols: Double, rows: Double){
         if (edges.isNotEmpty()){
             val index = edges.size -1
 
-            setUnion(edges[index])
+            setUnionEdge(edges[index].left, edges[index].right)
             edges.removeAt(index)
         }
         nodes.forEach{
@@ -53,25 +50,23 @@ class Maze(cols: Double, rows: Double){
         }
     }
 
-    private fun setUnion(set :List<Node>){
-        if(set[0].setKey != set[1].setKey){
-            val setSizeA = sets[set[0].setKey]?.size
-            val setSizeB = sets[set[1].setKey]?.size
+    private fun setUnionEdge(left: Node, right: Node){
+        if (left.setKey != right.setKey){
+            val setSizeLeft = sets[left.setKey]?.size
+            val setSizeRight = sets[right.setKey]?.size
 
-            if (setSizeA != null && setSizeB != null){
-                val setSizeResult = setSizeA.compareTo(setSizeB)
-                if (setSizeResult > 0){
-                    union(set[1].setKey, set[0].setKey)
-                }else if (setSizeResult < 0){
-                    union(set[0].setKey, set[1].setKey)
-                }else{
-                    if (set[0].setKey > set[1].setKey){
-                        union(set[1].setKey, set[0].setKey)
-                    }else {
-                        union(set[0].setKey, set[1].setKey)
+            if (setSizeLeft != null && setSizeRight != null){
+                setSizeLeft.compareTo(setSizeRight).let {
+                    when {
+                        it > 0 -> union(right.setKey, left.setKey)
+                        it < 0 -> union(left.setKey, right.setKey)
+                        else -> when {
+                                left.setKey > right.setKey -> union(right.setKey, left.setKey)
+                                else -> union(left.setKey, right.setKey)
+                        }
                     }
                 }
-                set[0].removeWall(set[1])
+                left.removeWall(right)
             }
         }
     }
@@ -83,4 +78,7 @@ class Maze(cols: Double, rows: Double){
         }
         sets.remove(key)
     }
+
 }
+
+data class NodePair(val left: Node, val right: Node)

@@ -9,7 +9,7 @@ fun main() = application {
     }
 
     program {
-        val scale = 80.0
+        val scale = 40.0
         //Calculate columns and rows based on width and height of canvas
         val cols = floor(drawer.width / scale)
         val rows = floor(drawer.height / scale)

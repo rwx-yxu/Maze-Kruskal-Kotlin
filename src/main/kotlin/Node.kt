@@ -1,5 +1,6 @@
 import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.Drawer
+import org.openrndr.math.Vector2
 
 class Node(private val i: Int, private val j: Int, val nodeIndex: Int){
     private val walls = mutableListOf(true, true, true, true)
@@ -16,23 +17,29 @@ class Node(private val i: Int, private val j: Int, val nodeIndex: Int){
         }
         drawer.stroke = ColorRGBa.BLACK
         drawer.fill = null
-
+        val lineSegmentVectors = mutableListOf<Vector2>()
         //north wall - draw wall when true
         if(this.walls[0]){
-            drawer.lineSegment(x, y, x + scale, y)
+            lineSegmentVectors.add(Vector2(x, y))
+            lineSegmentVectors.add(Vector2(x + scale, y))
         }
         //south wall
         if(this.walls[1]){
-            drawer.lineSegment(x + scale, y + scale, x , y + scale)
+            lineSegmentVectors.add(Vector2(x + scale, y + scale))
+            lineSegmentVectors.add(Vector2(x , y + scale))
         }
         //west wall
         if(this.walls[2]){
-            drawer.lineSegment(x , y + scale, x , y)
+            lineSegmentVectors.add(Vector2(x , y + scale))
+            lineSegmentVectors.add(Vector2(x , y))
         }
         //east wall
         if(this.walls[3]){
-            drawer.lineSegment(x + scale, y , x + scale, y + scale)
+            lineSegmentVectors.add(Vector2(x + scale, y))
+            lineSegmentVectors.add(Vector2(x + scale, y + scale))
         }
+        drawer.lineSegments(lineSegmentVectors)
+
     }
 
     fun getNeighbours(cols:Int, rows: Int, nodes: List<Node>): List<Node>{
