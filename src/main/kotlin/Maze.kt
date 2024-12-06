@@ -9,9 +9,9 @@ class Maze(cols: Double, rows: Double){
         fun nodeIndex(i:Int, j:Int, cols:Int, rows: Int): Int{
             //validation for edge cases will return a null index
             if (i < 0 || j < 0 || i > cols-1 || j > rows -1){
-                return -1;
+                return -1
             }
-            return i + j * cols;
+            return i + j * cols
         }
     }
 

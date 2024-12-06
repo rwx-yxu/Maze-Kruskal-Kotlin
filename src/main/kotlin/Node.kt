@@ -12,26 +12,26 @@ class Node(private val i: Int, private val j: Int, val nodeIndex: Int){
         //Check if the node should be highlighted
         if(highlight){
             drawer.fill = ColorRGBa.RED
-            drawer.rectangle(x,y,scale,scale);
+            drawer.rectangle(x,y,scale,scale)
         }
         drawer.stroke = ColorRGBa.BLACK
         drawer.fill = null
 
         //north wall - draw wall when true
         if(this.walls[0]){
-            drawer.lineSegment(x, y, x + scale, y);
+            drawer.lineSegment(x, y, x + scale, y)
         }
         //south wall
         if(this.walls[1]){
-            drawer.lineSegment(x + scale, y + scale, x , y + scale);
+            drawer.lineSegment(x + scale, y + scale, x , y + scale)
         }
         //west wall
         if(this.walls[2]){
-            drawer.lineSegment(x , y + scale, x , y);
+            drawer.lineSegment(x , y + scale, x , y)
         }
         //east wall
         if(this.walls[3]){
-            drawer.lineSegment(x + scale, y , x + scale, y + scale);
+            drawer.lineSegment(x + scale, y , x + scale, y + scale)
         }
     }
 
